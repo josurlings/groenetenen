@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
-import org.springframework.format.annotation.NumberFormat.Style;
 
 import be.vdab.valueobjects.Adres;
 
@@ -21,7 +20,8 @@ public class Filiaal implements Serializable
 	private Adres adres;
 	public Filiaal(String naam,
 	boolean hoofdFiliaal,
-	@NumberFormat(style = Style.NUMBER)
+	//@NumberFormat(style = Style.NUMBER)
+	@NumberFormat(pattern = "##,###,##0.00")
 	BigDecimal waardeGebouw,
 	@DateTimeFormat(style = "F-")
 	LocalDate inGebruikName,

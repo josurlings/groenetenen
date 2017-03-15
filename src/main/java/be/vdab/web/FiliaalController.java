@@ -4,7 +4,9 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.vdab.entities.Filiaal;
 import be.vdab.exceptions.FiliaalHeeftNogWerknemersException;
 import be.vdab.services.FiliaalService;
+import be.vdab.valueobjects.PostcodeReeks;
 
 @Controller 
 @RequestMapping("/filialen") 
@@ -50,7 +53,8 @@ class FiliaalController
 	//}
 	ModelAndView findAll()
 	{
-		return new ModelAndView(FILIALEN_VIEW, "filialen", filiaalService.findAll());
+		return new ModelAndView(FILIALEN_VIEW, "filialen", filiaalService.findAll())
+					.addObject("aantalFilialen", filiaalService.findAantalFilialen());
 		//		.addObject("werknemers", werknemerService.findAll());
 	}
 
@@ -119,5 +123,25 @@ return modelAndView;
 	return VERWIJDERD_VIEW;
 	}
 	
+	private static final String PER_POSTCODE_VIEW = "filialen/perpostcode";
+	@GetMapping("perpostcode")
+	ModelAndView findByPostcodeReeks() {
+	PostcodeReeks reeks = new PostcodeReeks();
+	//reeks.setVanpostcode(1000);
+	//reeks.setTotpostcode(9999);
+	return new ModelAndView(PER_POSTCODE_VIEW).addObject(reeks); 
+	}
+	
+	@GetMapping(params = {"vanpostcode", "totpostcode"}) 
+	ModelAndView findByPostcodeReeks(PostcodeReeks reeks) { 
+	return new ModelAndView(PER_POSTCODE_VIEW,
+	"filialen", filiaalService.findByPostcodeReeks(reeks)); 
+	}
+	
+	@InitBinder("postcodeReeks") 
+	void initBinderPostcodeReeks(DataBinder dataBinder) 
+	{ 
+	dataBinder.setRequiredFields("vanpostcode", "totpostcode"); 
+	}
 	
 }

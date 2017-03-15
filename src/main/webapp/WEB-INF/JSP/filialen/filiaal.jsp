@@ -21,11 +21,7 @@
 <dt>Postcode</dt><dd>${filiaal.adres.postcode}</dd>
 <dt>Gemeente</dt><dd>${filiaal.adres.gemeente}</dd>
 <dt>Type</dt><dd>${filiaal.hoofdFiliaal ? "Hoofdfiliaal" : "Bijfiliaal"}</dd>
-<dt>Waarde gebouw</dt>
-<%-- <dd>&euro; <fmt:formatNumber value='${filiaal.waardeGebouw}'/></dd> --%>
-<dd>&euro; <spring:eval expression='filiaal.waardeGebouw'/></dd>
-<dt>Ingebruikname</dt>
-<spring:eval expression='filiaal.inGebruikName'/>
+
 <%--
 <fmt:parseDate value="${filiaal.inGebruikName}" pattern="yyyy-MM-dd"
 var="inGebruikNameAlsDate" type="date"/>
@@ -33,6 +29,11 @@ var="inGebruikNameAlsDate" type="date"/>
 dateStyle="short"/></dd>
 --%>
 
+<dt>Waarde gebouw</dt>
+<%-- <dd>&euro; <fmt:formatNumber value='${filiaal.waardeGebouw}'/></dd> --%>
+<dd>&euro; <spring:eval expression='filiaal.waardeGebouw'/></dd>
+<dt>Ingebruikname</dt>
+<spring:eval expression='filiaal.inGebruikName'/>
 
 </dl>
 <spring:url value='/filialen/{id}/verwijderen' var='verwijderURL'>
