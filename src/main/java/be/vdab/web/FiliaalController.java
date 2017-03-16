@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -131,17 +132,29 @@ return modelAndView;
 	//reeks.setTotpostcode(9999);
 	return new ModelAndView(PER_POSTCODE_VIEW).addObject(reeks); 
 	}
-	
+	/*
 	@GetMapping(params = {"vanpostcode", "totpostcode"}) 
 	ModelAndView findByPostcodeReeks(PostcodeReeks reeks) { 
 	return new ModelAndView(PER_POSTCODE_VIEW,
 	"filialen", filiaalService.findByPostcodeReeks(reeks)); 
 	}
-	
+	*/
 	@InitBinder("postcodeReeks") 
 	void initBinderPostcodeReeks(DataBinder dataBinder) 
 	{ 
 	dataBinder.setRequiredFields("vanpostcode", "totpostcode"); 
+	}
+	
+	@GetMapping(params = {"vanpostcode", "totpostcode"})
+	ModelAndView findByPostcodeReeks(PostcodeReeks reeks,
+	BindingResult bindingResult) 
+	{ 
+		ModelAndView modelAndView = new ModelAndView(PER_POSTCODE_VIEW);
+		if ( ! bindingResult.hasErrors())
+		{ 
+		modelAndView.addObject("filialen",filiaalService.findByPostcodeReeks(reeks));
+		}
+		return modelAndView;
 	}
 	
 }
