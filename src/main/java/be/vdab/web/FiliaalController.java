@@ -1,11 +1,15 @@
 package be.vdab.web;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
+
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
+import org.springframework.web.bind.WebDataBinder;
+//import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,8 +40,8 @@ class FiliaalController
 	private static final String VERWIJDERD_VIEW = "filialen/verwijderd";
 
 
-	private static final Logger LOGGER =
-			Logger.getLogger(FiliaalController.class.getName());
+	//private static final Logger LOGGER =
+	//		Logger.getLogger(FiliaalController.class.getName());
 	private final FiliaalService filiaalService;
 
 	FiliaalController(FiliaalService filiaalService) 
@@ -55,17 +59,36 @@ class FiliaalController
 	ModelAndView findAll()
 	{
 		return new ModelAndView(FILIALEN_VIEW, "filialen", filiaalService.findAll())
-					.addObject("aantalFilialen", filiaalService.findAantalFilialen());
+				.addObject("aantalFilialen", filiaalService.findAantalFilialen());
 		//		.addObject("werknemers", werknemerService.findAll());
 	}
 
-
+	/*
 	@GetMapping("toevoegen") 
 	String createForm()
 	{
 		return TOEVOEGEN_VIEW;
 	}
-
+	*/
+	
+	@GetMapping("toevoegen")
+	ModelAndView createForm()
+	{
+	return new ModelAndView(TOEVOEGEN_VIEW).addObject(new Filiaal());
+	}
+	
+	@PostMapping
+	String create(@Valid Filiaal filiaal, BindingResult bindingResult)
+	{
+	if (bindingResult.hasErrors()) 
+	{
+	return TOEVOEGEN_VIEW;
+	}
+	filiaalService.create(filiaal);
+	return REDIRECT_URL_NA_TOEVOEGEN;
+	}
+		
+	/*
 	@PostMapping 
 	String create() {
 		// later voeg je een record toe aan de database
@@ -76,7 +99,7 @@ class FiliaalController
 	public FiliaalService getFiliaalService() {
 		return filiaalService;
 	}
-	/*
+
 @GetMapping(params = "id") 
 ModelAndView read(long id) 
 { 
@@ -121,16 +144,16 @@ return modelAndView;
 	@GetMapping("{id}/verwijderd")
 	String deleted()
 	{
-	return VERWIJDERD_VIEW;
+		return VERWIJDERD_VIEW;
 	}
-	
+
 	private static final String PER_POSTCODE_VIEW = "filialen/perpostcode";
 	@GetMapping("perpostcode")
 	ModelAndView findByPostcodeReeks() {
-	PostcodeReeks reeks = new PostcodeReeks();
-	//reeks.setVanpostcode(1000);
-	//reeks.setTotpostcode(9999);
-	return new ModelAndView(PER_POSTCODE_VIEW).addObject(reeks); 
+		PostcodeReeks reeks = new PostcodeReeks();
+		//reeks.setVanpostcode(1000);
+		//reeks.setTotpostcode(9999);
+		return new ModelAndView(PER_POSTCODE_VIEW).addObject(reeks); 
 	}
 	/*
 	@GetMapping(params = {"vanpostcode", "totpostcode"}) 
@@ -138,23 +161,50 @@ return modelAndView;
 	return new ModelAndView(PER_POSTCODE_VIEW,
 	"filialen", filiaalService.findByPostcodeReeks(reeks)); 
 	}
-	*/
+
 	@InitBinder("postcodeReeks") 
 	void initBinderPostcodeReeks(DataBinder dataBinder) 
 	{ 
-	dataBinder.setRequiredFields("vanpostcode", "totpostcode"); 
+		dataBinder.setRequiredFields("vanpostcode", "totpostcode"); 
+	}
+	*/
+	
+	@InitBinder("postcodeReeks") 
+	void initBinderPostcodeReeks(WebDataBinder binder) 
+	{ 
+		binder.initDirectFieldAccess(); 
 	}
 	
 	@GetMapping(params = {"vanpostcode", "totpostcode"})
-	ModelAndView findByPostcodeReeks(PostcodeReeks reeks,
-	BindingResult bindingResult) 
+	ModelAndView findByPostcodeReeks(@Valid PostcodeReeks reeks,
+			BindingResult bindingResult) 
 	{ 
 		ModelAndView modelAndView = new ModelAndView(PER_POSTCODE_VIEW);
+		/*
 		if ( ! bindingResult.hasErrors())
 		{ 
 		modelAndView.addObject("filialen",filiaalService.findByPostcodeReeks(reeks));
 		}
+		 */
+		if ( ! bindingResult.hasErrors()) 
+		{
+			List<Filiaal> filialen = filiaalService.findByPostcodeReeks(reeks);
+			if (filialen.isEmpty()) 
+			{
+				bindingResult.reject("geenFilialen"); 
+			}
+			else 
+			{
+				modelAndView.addObject("filialen", filialen);
+			}
+		}
 		return modelAndView;
+	}
+	
+	@InitBinder("filiaal")
+	void initBinderFiliaal(WebDataBinder binder)
+	{
+		binder.initDirectFieldAccess(); 
 	}
 	
 }
