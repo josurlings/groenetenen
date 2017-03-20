@@ -38,6 +38,8 @@ class FiliaalController
 	private static final String REDIRECT_URL_HEEFT_NOG_WERKNEMERS =
 			"redirect:/filialen/{id}";
 	private static final String VERWIJDERD_VIEW = "filialen/verwijderd";
+	private static final String WIJZIGEN_VIEW = "filialen/wijzigen";
+	private static final String REDIRECT_URL_NA_WIJZIGEN = "redirect:/filialen";
 
 
 	//private static final Logger LOGGER =
@@ -146,7 +148,18 @@ return modelAndView;
 	{
 		return VERWIJDERD_VIEW;
 	}
-
+	
+	@PostMapping("{id}/wijzigen")
+	String update(@Valid Filiaal filiaal, BindingResult bindingResult) 
+	{
+	if (bindingResult.hasErrors()) 
+	{
+	return WIJZIGEN_VIEW;
+	}
+	filiaalService.update(filiaal);
+	return REDIRECT_URL_NA_WIJZIGEN;
+	}
+	
 	private static final String PER_POSTCODE_VIEW = "filialen/perpostcode";
 	@GetMapping("perpostcode")
 	ModelAndView findByPostcodeReeks() {
@@ -206,5 +219,17 @@ return modelAndView;
 	{
 		binder.initDirectFieldAccess(); 
 	}
+	
+	@GetMapping("{id}/wijzigen")
+	ModelAndView updateForm(@PathVariable long id)
+	{
+	Optional<Filiaal> optionalFiliaal = filiaalService.read(id);
+	if (! optionalFiliaal.isPresent()) 
+	{
+	return new ModelAndView(REDIRECT_URL_FILIAAL_NIET_GEVONDEN);
+	}
+	return new ModelAndView(WIJZIGEN_VIEW).addObject(optionalFiliaal.get());
+	}
+	
 	
 }
