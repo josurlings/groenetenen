@@ -52,15 +52,21 @@ return REDIRECT_URL_NA_TOEVOEGEN;
 ModelAndView createForm1() {
 return new ModelAndView(STAP1_VIEW).addObject(new Offerte());
 }
+
 @PostMapping(params = "volgende")
 String createForm1Naar2(@Validated(Offerte.Stap1.class) Offerte offerte, 
 BindingResult bindingResult) {
 return bindingResult.hasErrors() ? STAP1_VIEW : STAP2_VIEW;
 }
+
 @PostMapping(params = "vorige")
 String createForm2Naar1(Offerte offerte) {
 return STAP1_VIEW;
 }
+
+/* parameters in de create methode van plaats verwisselen is toegestaan,
+ * BindingResult moet na Offerte komen
+ * zie volgende methode create
 @PostMapping(params = "bevestigen")
 String create(@Validated(Offerte.Stap2.class) Offerte offerte, 
 BindingResult bindingResult, SessionStatus sessionStatus) 
@@ -77,6 +83,26 @@ LOGGER.info("offerte versturen via e-mail");
 sessionStatus.setComplete(); 
 return REDIRECT_URL_NA_TOEVOEGEN;
 }
+*/
+
+
+@PostMapping(params = "bevestigen")
+String create(@Validated(Offerte.Stap2.class) Offerte offerte, SessionStatus sessionStatus, BindingResult bindingResult)
+
+{ 
+if ( ! offerte.getGazontypes().values().contains(true))
+{
+	bindingResult.reject("minstensEenGazonType");
+}	
+if (bindingResult.hasErrors()) 
+{
+return STAP2_VIEW;
+}
+LOGGER.info("offerte versturen via e-mail");
+sessionStatus.setComplete(); 
+return REDIRECT_URL_NA_TOEVOEGEN;
+}
+
 
 @PostMapping(params = "nogeennummer")
 String nogEenNummer(Offerte offerte) 
