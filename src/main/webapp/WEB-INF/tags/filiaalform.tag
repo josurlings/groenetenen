@@ -25,6 +25,7 @@ max='9999'/>
 <form:errors path='waardeGebouw' delimiter=', '/></form:label>
 <form:input path='waardeGebouw' required='required'/>
 <div class='rij'><form:checkbox path='hoofdFiliaal' label='Hoofdfiliaal'/></div>
+<form:hidden path='versie'/>
 <input type='submit' value='${knopTekst}' id='submitknop'>
 <script>
 document.getElementById('filiaalform').onsubmit= function() 

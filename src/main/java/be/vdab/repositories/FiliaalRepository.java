@@ -1,27 +1,38 @@
 package be.vdab.repositories;
 
 import java.util.List;
-import java.util.Optional;
+//import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import be.vdab.entities.Filiaal;
-import be.vdab.valueobjects.PostcodeReeks;
+//import be.vdab.valueobjects.PostcodeReeks;
 
-public interface FiliaalRepository 
-{
-	void create(Filiaal filiaal);
+
+public interface FiliaalRepository extends JpaRepository<Filiaal, Long>
+{ 
+
+	List<Filiaal> findByAdresPostcodeBetweenOrderByNaam(int van, int tot); 
 	
-	Optional<Filiaal> read(long id);
+//	List<Filiaal> findMetHoogsteWaardeGebouw();
 	
-	void update(Filiaal filiaal);
 	
-	void delete(long id);
+//	void create(Filiaal filiaal);
 	
-	List<Filiaal> findAll();
+//	Optional<Filiaal> read(long id);
 	
-	long findAantalFilialen();
+//	void update(Filiaal filiaal);
+	
+//	void delete(long id);
+	
+//	List<Filiaal> findAll();
+	
+//	long findAantalFilialen();
 	
 	// het aantal werknemers van een filiaal:
-	long findAantalWerknemers(long id);
+//	long findAantalWerknemers(long id);
 	
-	List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks);
+//	List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks);
+	
+		
 }

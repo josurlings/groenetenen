@@ -26,30 +26,47 @@ public class DefaultFiliaalService implements FiliaalService
 	
 	@Override
 	@ModifyingTransactionalServiceMethod
-	public void create(Filiaal filiaal) 
+	public void create(Filiaal filiaal)
 	{
-	filiaalRepository.create(filiaal);
+//	filiaalRepository.create(filiaal);
+	filiaalRepository.save(filiaal);
 	}
 	@Override
 	public Optional<Filiaal> read(long id) 
 	{
-	return filiaalRepository.read(id);
+//	return filiaalRepository.read(id);
+	return Optional.ofNullable(filiaalRepository.findOne(id));
 	}
 	@Override
 	@ModifyingTransactionalServiceMethod
 	public void update(Filiaal filiaal)
 	{
-	filiaalRepository.update(filiaal);
+//	filiaalRepository.update(filiaal);
+	filiaalRepository.save(filiaal);
 	}
 	@Override
 	@ModifyingTransactionalServiceMethod
-	public void delete(long id) {
-	if (filiaalRepository.findAantalWerknemers(id) != 0) 
+	public void delete(long id)
 	{
-	throw new FiliaalHeeftNogWerknemersException();
+//	if (filiaalRepository.findAantalWerknemers(id) != 0) 
+//	{
+//	throw new FiliaalHeeftNogWerknemersException();
+//	}
+//	filiaalRepository.delete(id);
+//		Optional<Filiaal> optionalFiliaal = filiaalRepository.read(id);
+		Optional<Filiaal> optionalFiliaal = Optional.ofNullable(filiaalRepository.findOne(id));
+		if (optionalFiliaal.isPresent())
+		{
+		if ( ! optionalFiliaal.get().getWerknemers().isEmpty()) {
+		throw new FiliaalHeeftNogWerknemersException();
+		}
+		filiaalRepository.delete(id);
+		}	
+		
 	}
-	filiaalRepository.delete(id);
-	}
+	
+	
+	
 	@Override
 	public List<Filiaal> findAll()
 	{
@@ -58,10 +75,15 @@ public class DefaultFiliaalService implements FiliaalService
 	@Override
 	public long findAantalFilialen() 
 	{
-	return filiaalRepository.findAantalFilialen();
+//	return filiaalRepository.findAantalFilialen();
+	return filiaalRepository.count();
 	}
 	@Override
-	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks) {
-	return filiaalRepository.findByPostcodeReeks(reeks);
+	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks)
+	{
+//	return filiaalRepository.findByPostcodeReeks(reeks);
+	return filiaalRepository.findByAdresPostcodeBetweenOrderByNaam(
+			reeks.getVanpostcode(),
+			reeks.getTotpostcode());
 	}
 }

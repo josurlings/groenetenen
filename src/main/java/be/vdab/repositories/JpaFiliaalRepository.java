@@ -1,34 +1,28 @@
 package be.vdab.repositories;
 
-import java.sql.Date;
-//import java.math.BigDecimal;
-//import java.time.LocalDate;
-//import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+
+//import java.util.List;
+//import java.util.Optional;
 //import java.util.concurrent.ConcurrentHashMap;
 //import java.util.stream.Collectors;
 
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+//import javax.persistence.EntityManager;
+//import javax.persistence.PersistenceContext;
 
-import be.vdab.entities.Filiaal;
-import be.vdab.valueobjects.Adres;
+//import org.springframework.stereotype.Repository;
+
+//import be.vdab.entities.Filiaal;
 //import be.vdab.valueobjects.Adres;
-import be.vdab.valueobjects.PostcodeReeks;
+//import be.vdab.valueobjects.Adres;
+//import be.vdab.valueobjects.PostcodeReeks;
 
-@Repository
-public class JdbcFiliaalRepository implements FiliaalRepository
+//@Repository
+//public class JpaFiliaalRepository implements FiliaalRepository
+
+public class JpaFiliaalRepository 
 {
-
-	
+/*
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 //	private final Map<Long, Filiaal> filialen = new ConcurrentHashMap<>();
@@ -66,7 +60,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 			"inGebruikName=:inGebruikName, waardeGebouw=:waardeGebouw where id = :id";
 		
 	
-	JdbcFiliaalRepository(JdbcTemplate jdbcTemplate,
+	JpaFiliaalRepository(JdbcTemplate jdbcTemplate,
 			NamedParameterJdbcTemplate namedParameterJdbcTemplate)
 			{
 			this.jdbcTemplate = jdbcTemplate;
@@ -85,7 +79,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 		filialen.put(3L, new Filiaal(3, "Gavdos", false, BigDecimal.valueOf(3000),
 		LocalDate.now(), new Adres("Koestraat", "44", 9700, "Oudenaarde")));
 		}
-	*/
+
 		
 	public JdbcTemplate getJdbcTemplate() 
 	{
@@ -125,7 +119,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 	filiaal.setId(Collections.max(filialen.keySet()) + 1); 
 	filialen.put(filiaal.getId(), filiaal);
 	}
-	*/
+
 	
 	@Override
 	public Optional<Filiaal> read(long id)
@@ -139,7 +133,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 			{
 			return Optional.empty(); // record niet gevonden
 			}
-	*/
+
 		Map<String, Long> parameters = Collections.singletonMap("id", id); 
 		try 
 		{
@@ -195,6 +189,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 	//return filialen.size();
 		return jdbcTemplate.queryForObject(SQL_FIND_AANTAL_FILIALEN, Long.class);
 	}
+
 	
 	@Override
 	public long findAantalWerknemers(long id) 
@@ -204,7 +199,6 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 				SQL_FIND_AANTAL_WERKNEMERS, Long.class, id);
 	}
 	
-	/*
 	@Override
 	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks) {
 	return filialen.values().stream()
@@ -217,7 +211,7 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 	return jdbcTemplate.query(SQL_FIND_BY_POSTCODE, rowMapper,
 	reeks.getVanpostcode(), reeks.getTotpostcode()); 
 	}
-	*/
+	
 	@Override
 	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks) 
 	{
@@ -227,4 +221,51 @@ public class JdbcFiliaalRepository implements FiliaalRepository
 	return namedParameterJdbcTemplate.query(SQL_FIND_BY_POSTCODE, parameters, 
 	rowMapper);
 	}
+	
+
+	
+	private EntityManager entityManager;
+	@PersistenceContext 
+	void setEntityManager(EntityManager entityManager) { 
+	this.entityManager = entityManager;
+	}
+	@Override
+	public void create(Filiaal filiaal) {
+	entityManager.persist(filiaal);
+	}
+	@Override
+	public Optional<Filiaal> read(long id) {
+	return Optional.ofNullable(entityManager.find(Filiaal.class, id));
+	}
+	@Override
+	public void update(Filiaal filiaal) {
+	entityManager.merge(filiaal); 
+	}
+	@Override
+	public void delete(long id) {
+	entityManager.remove(read(id).get());
+	}
+	@Override
+	public List<Filiaal> findAll() {
+	return entityManager.createNamedQuery("Filiaal.findAll", Filiaal.class)
+	.getResultList();
+	}
+	@Override
+	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks) {
+	return entityManager
+	.createNamedQuery("Filiaal.findByPostcodeReeks", Filiaal.class)
+	.setParameter("van", reeks.getVanpostcode())
+	.setParameter("tot", reeks.getTotpostcode())
+	.getResultList();
+	}
+	@Override
+	public long findAantalFilialen() {
+	return entityManager.createNamedQuery(
+	"Filiaal.findAantal", Number.class).getSingleResult().longValue();
+	}
+
+*/
 }
+
+
+

@@ -3,12 +3,14 @@ package be.vdab.repositories;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+//import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 //import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 //import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
@@ -16,7 +18,8 @@ import be.vdab.entities.Filiaal;
 import be.vdab.valueobjects.Adres;
 
 @Configuration
-@ComponentScan 
+//@ComponentScan 
+@EnableJpaRepositories
 public class RepositoriesConfig 
 {
 
@@ -32,13 +35,21 @@ NamedParameterJdbcTemplate namedJdbcTemplate(DataSource dataSource)
 {
 return new NamedParameterJdbcTemplate(dataSource);
 }
-*/
+
 
 @Bean
 DataSourceTransactionManager transactionManager(DataSource dataSource)
 {
 return new DataSourceTransactionManager(dataSource); 
 }
+*/
+	
+@Bean
+JpaTransactionManager transactionManager(LocalContainerEntityManagerFactoryBean entityManagerFactory)
+{
+return new JpaTransactionManager(entityManagerFactory.getObject()); 
+}
+
 
 @Bean
 LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource)
@@ -52,8 +63,13 @@ HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 adapter.setShowSql(true); 
 factory.setJpaVendorAdapter(adapter); 
 factory.getJpaPropertyMap().put("hibernate.format_sql", true); 
-factory.getJpaPropertyMap().put("hibernate.use_sql_comments", true);
+factory.getJpaPropertyMap().put("hibernate.use_sql_comments", true); 
 return factory;
+}
+
+@Bean
+PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslator() {
+return new PersistenceExceptionTranslationPostProcessor();
 }
 
 }

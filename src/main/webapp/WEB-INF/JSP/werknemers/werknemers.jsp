@@ -7,5 +7,17 @@
 <body>
 <v:menu/>
 <h1>Werknemers</h1>
+
+<table>
+<thead><tr><th>Voornaam</th><th>Familienaam</th><th>Filiaal</th></tr></thead>
+<tbody>
+<c:forEach items='${werknemers}' var='werknemer'>
+<tr><td>${werknemer.voornaam}</td>
+<td>${werknemer.familienaam}</td>
+<td>${werknemer.filiaal.naam}</td></tr>
+</c:forEach>
+</tbody>
+</table>
+
 </body>
 </html>

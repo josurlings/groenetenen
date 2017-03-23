@@ -16,6 +16,11 @@
 <c:choose>
 <c:when test="${not empty filiaal}">
 <h1>${filiaal.naam}</h1>
+
+<c:if test="${param.optimisticlockingexception}">
+<div class="fout">Filiaal werd door andere gebruiker als volgt gewijzigd:</div>
+</c:if>
+
 <dl><dt>Straat</dt><dd>${filiaal.adres.straat}</dd>
 <dt>Huisnr.</dt><dd>${filiaal.adres.huisNr}</dd>
 <dt>Postcode</dt><dd>${filiaal.adres.postcode}</dd>
