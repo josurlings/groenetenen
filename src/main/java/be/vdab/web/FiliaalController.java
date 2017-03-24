@@ -4,6 +4,7 @@ import java.util.List;
 //import java.util.Optional;
 //import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -86,13 +87,14 @@ class FiliaalController
 	}
 	
 	@PostMapping
-	String create(@Valid Filiaal filiaal, BindingResult bindingResult)
+	String create(@Valid Filiaal filiaal, HttpServletRequest request, BindingResult bindingResult)
 	{
 	if (bindingResult.hasErrors()) 
 	{
 	return TOEVOEGEN_VIEW;
 	}
-	filiaalService.create(filiaal);
+// filiaalService.create(filiaal);
+	filiaalService.create(filiaal, request.getRequestURL().toString());
 	return REDIRECT_URL_NA_TOEVOEGEN;
 	}
 		
@@ -284,6 +286,13 @@ return modelAndView;
 	return new ModelAndView(REDIRECT_URL_FILIAAL_NIET_GEVONDEN);
 	}
 	return new ModelAndView(WIJZIGEN_VIEW).addObject(filiaal);
+	}
+	
+	private static final String PER_ID_VIEW = "filialen/perid";
+	@GetMapping("perid")
+	String findById() 
+	{
+	return PER_ID_VIEW;
 	}
 	
 }
