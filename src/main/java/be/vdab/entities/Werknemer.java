@@ -3,6 +3,7 @@ package be.vdab.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -64,6 +65,7 @@ public class Werknemer implements Serializable
 	public long getRijksregisterNr() {
 		return rijksregisterNr;
 	}
+	@Column(unique = true)
 	public void setRijksregisterNr(long rijksregisterNr) {
 		this.rijksregisterNr = rijksregisterNr;
 	}

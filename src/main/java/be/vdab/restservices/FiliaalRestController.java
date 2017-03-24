@@ -50,13 +50,14 @@ public FiliaalService getFiliaalService() {
 }
 
 @GetMapping("{filiaal}")
-Filiaal read(@PathVariable Filiaal filiaal)
+FiliaalResource read(@PathVariable Filiaal filiaal)
 { 
 	if (filiaal == null) 
 	{
 		throw new FiliaalNietGevondenException();
 	}
-return filiaal;
+//return filiaal;
+return new FiliaalResource(filiaal, entityLinks);
 }
 
 @ExceptionHandler(FiliaalNietGevondenException.class) 
@@ -139,6 +140,12 @@ return headers;
 public EntityLinks getEntityLinks()
 {
 	return entityLinks;
+}
+
+@GetMapping
+FilialenResource findAll() 
+{
+return new FilialenResource(filiaalService.findAll(), entityLinks);
 }
 
 }

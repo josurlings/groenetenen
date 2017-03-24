@@ -36,7 +36,15 @@ dateStyle="short"/></dd>
 
 <dt>Waarde gebouw</dt>
 <%-- <dd>&euro; <fmt:formatNumber value='${filiaal.waardeGebouw}'/></dd> --%>
-<dd>&euro; <spring:eval expression='filiaal.waardeGebouw'/></dd>
+<dd>&euro; <spring:eval expression='filiaal.waardeGebouw'/>
+
+<spring:url value='/euro/{euro}/naardollar' var="naarDollarURL">
+<spring:param name='euro' value='${filiaal.waardeGebouw}'/>
+</spring:url>
+<a href='${naarDollarURL}'>in $ </a>
+</dd>
+
+
 <dt>Ingebruikname</dt>
 <spring:eval expression='filiaal.inGebruikName'/>
 
