@@ -3,6 +3,8 @@ package be.vdab.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Isolation;
 //import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +88,7 @@ public class DefaultFiliaalService implements FiliaalService
 	return filiaalRepository.count();
 	}
 	@Override
+	@PreAuthorize("hasAuthority('manager')")
 	public List<Filiaal> findByPostcodeReeks(PostcodeReeks reeks)
 	{
 //	return filiaalRepository.findByPostcodeReeks(reeks);

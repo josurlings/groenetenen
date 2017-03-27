@@ -51,6 +51,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry)
 public void addViewControllers(ViewControllerRegistry registry)
 {
 	registry.addViewController("/info").setViewName("info"); 
+	registry.addViewController("/login").setViewName("login");
 }
 
 @Bean
