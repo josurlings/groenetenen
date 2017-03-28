@@ -8,6 +8,7 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 //import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import be.vdab.aop.AOPConfig;
 import be.vdab.datasource.DataSourceConfig;
 import be.vdab.mail.MailConfig;
 import be.vdab.repositories.RepositoriesConfig;
@@ -29,7 +30,7 @@ return new String[] { "/" };
 protected Class<?>[] getRootConfigClasses()
 { 
 return new Class<?>[] {DataSourceConfig.class, RepositoriesConfig.class, ServicesConfig.class, RestClientsConfig.class,
-						MailConfig.class, SecurityConfig.class};
+						MailConfig.class, SecurityConfig.class, AOPConfig.class};
 }
 @Override
 protected Class<?>[] getServletConfigClasses()
