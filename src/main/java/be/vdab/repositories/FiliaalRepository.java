@@ -1,5 +1,6 @@
 package be.vdab.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 //import java.util.Optional;
 
@@ -13,6 +14,8 @@ public interface FiliaalRepository extends JpaRepository<Filiaal, Long>
 { 
 
 	List<Filiaal> findByAdresPostcodeBetweenOrderByNaam(int van, int tot); 
+	
+	List<Filiaal> findByWaardeGebouwNot(BigDecimal waarde);
 	
 //	List<Filiaal> findMetHoogsteWaardeGebouw();
 	
